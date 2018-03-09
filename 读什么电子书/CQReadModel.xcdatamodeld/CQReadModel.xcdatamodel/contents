@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="12141" systemVersion="16F2073" minimumToolsVersion="Automatic" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
+    <entity name="ChapterModel" representedClassName="ChapterModel" syncable="YES">
+        <attribute name="chapterContent" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="chapterOffset" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="currentChapter" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="pageCountForChapter" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="titleH1" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="titleH2" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="chapter_cover" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="CoverModel" inverseName="cover_chapter" inverseEntity="CoverModel" syncable="YES"/>
+        <relationship name="chapter_mark" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MarkModel" inverseName="mark_chapter" inverseEntity="MarkModel" syncable="YES"/>
+        <relationship name="chapter_note" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="NoteModel" inverseName="note_chapter" inverseEntity="NoteModel" syncable="YES"/>
+        <relationship name="chapter_read" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ReadModel" inverseName="read_chapter" inverseEntity="ReadModel" syncable="YES"/>
+    </entity>
+    <entity name="CoverModel" representedClassName="CoverModel" syncable="YES">
+        <attribute name="cover" optional="YES" attributeType="Binary" syncable="YES"/>
+        <attribute name="length" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="location" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="stringFrame" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="stringRect" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="cover_chapter" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ChapterModel" inverseName="chapter_cover" inverseEntity="ChapterModel" syncable="YES"/>
+    </entity>
+    <entity name="MarkModel" representedClassName="MarkModel" syncable="YES">
+        <attribute name="currentChapter" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="currentPage" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="location" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="markContent" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="markTitle" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="mark_chapter" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ChapterModel" inverseName="chapter_mark" inverseEntity="ChapterModel" syncable="YES"/>
+        <relationship name="mark_read" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ReadModel" inverseName="read_mark" inverseEntity="ReadModel" syncable="YES"/>
+    </entity>
+    <entity name="NoteModel" representedClassName="NoteModel" syncable="YES">
+        <attribute name="currentChapter" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="currentPage" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="length" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="location" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="noteContent" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="noteTitle" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="type" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <relationship name="note_chapter" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ChapterModel" inverseName="chapter_note" inverseEntity="ChapterModel" syncable="YES"/>
+        <relationship name="note_read" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ReadModel" inverseName="read_note" inverseEntity="ReadModel" syncable="YES"/>
+    </entity>
+    <entity name="ReadModel" representedClassName="ReadModel" syncable="YES">
+        <attribute name="bookID" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="bookName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="cover" optional="YES" attributeType="Binary" syncable="YES"/>
+        <attribute name="currentFontSize" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="fileURL" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="pageCountForAll" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="userID" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <relationship name="read_chapter" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ChapterModel" inverseName="chapter_read" inverseEntity="ChapterModel" syncable="YES"/>
+        <relationship name="read_mark" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="MarkModel" inverseName="mark_read" inverseEntity="MarkModel" syncable="YES"/>
+        <relationship name="read_note" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="NoteModel" inverseName="note_read" inverseEntity="NoteModel" syncable="YES"/>
+        <relationship name="read_recoder" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="RecorderModel" inverseName="recoder_read" inverseEntity="RecorderModel" syncable="YES"/>
+    </entity>
+    <entity name="RecorderModel" representedClassName="RecorderModel" syncable="YES">
+        <attribute name="currentChapter" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="currentPage" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <relationship name="recoder_read" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ReadModel" inverseName="read_recoder" inverseEntity="ReadModel" syncable="YES"/>
+    </entity>
+    <entity name="ThemeModel" representedClassName="ThemeModel" syncable="YES">
+        <attribute name="firstLineHeadIndent" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="fontColorTag" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="fontSize" optional="YES" attributeType="Float" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="kernSpace" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="lineSpace" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="themeTag" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="ChapterModel" positionX="-27" positionY="-363" width="128" height="208"/>
+        <element name="CoverModel" positionX="-270" positionY="-306" width="128" height="135"/>
+        <element name="MarkModel" positionX="216" positionY="-93" width="128" height="165"/>
+        <element name="NoteModel" positionX="-0" positionY="93" width="128" height="195"/>
+        <element name="ReadModel" positionX="-261" positionY="-129" width="128" height="210"/>
+        <element name="RecorderModel" positionX="-459" positionY="-18" width="128" height="90"/>
+        <element name="ThemeModel" positionX="-479" positionY="-243" width="128" height="135"/>
+    </elements>
+</model>
