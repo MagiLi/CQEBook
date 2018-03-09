@@ -66,51 +66,7 @@
         [self openCurlEBookWithCell:cell withIndexPath:indexPath];
 //    }
 }
-//- (void)openScrollEBookWithCell:(CQMainCell *)cell withIndexPath:(NSIndexPath *)indexPath{
-//    cell.hidden = YES;
-//
-//    CGRect imgViewFrame = CGRectMake(cell.x, cell.y - self.collectionView.contentOffset.y, cell.width, cell.height - 21.0);
-//    CGFloat scaleY = kScreen_H / CGRectGetHeight(imgViewFrame);
-//    CGFloat scaleX = kScreen_W / CGRectGetWidth(imgViewFrame);
-//    CGFloat transformX1 = -CGRectGetMinX(imgViewFrame);
-//    CGFloat transformY1 = (kScreen_H - CGRectGetHeight(imgViewFrame)) * 0.5 - CGRectGetMinY(imgViewFrame);
-//    self.imgView.hidden = NO;
-//    self.imgView.frame = imgViewFrame;
-//
-//    CQPageScrollController *pageScrollVC = [[CQPageScrollController alloc] init];
-//    pageScrollVC.transformY = transformY1;
-//    pageScrollVC.transformX = transformX1;
-//    pageScrollVC.scaleY = scaleY;
-//    pageScrollVC.scaleX = scaleX;
-//    pageScrollVC.indexPath = indexPath;
-//    pageScrollVC.delegate = self;
-//    pageScrollVC.view.layer.anchorPoint = CGPointMake(0, 0.5);
-//    pageScrollVC.view.frame = CGRectMake(0, 0, kScreen_W, kScreen_H);
-//    pageScrollVC.view.layer.masksToBounds = YES;
-//
-//    CATransform3D pageViewTransform = CATransform3DIdentity;
-//    pageViewTransform.m42 = -transformY1;
-//    pageViewTransform.m41 = -transformX1;
-//    pageScrollVC.view.layer.transform = CATransform3DScale(pageViewTransform, 1 / scaleX, 1 / scaleY, 1.0);
-//    [self addChildViewController:pageScrollVC];
-//    [self.view addSubview:pageScrollVC.view];
-//    [self statusBarHiddenEvent:YES];
-//
-//    __block CATransform3D transform = CATransform3DIdentity;
-//    [UIView animateWithDuration:OpenBookAnimationDuration animations:^{
-//        transform.m34 = 4.5 / 2000;
-//        transform.m11 = scaleX * 1.3;
-//        transform.m22 = scaleY * 1.2;
-//        transform.m42 = transformY1;
-//        transform.m41 = transformX1;
-//        self.imgView.layer.transform =  CATransform3DRotate(transform, M_PI_2, 0, 1, 0);
-//        pageScrollVC.view.layer.transform = CATransform3DIdentity;
-//    } completion:^(BOOL finished) {
-//        self.imgView.hidden = YES;
-//        cell.hidden = NO;
-//        self.view.userInteractionEnabled = YES;
-//    }];
-//}
+
 - (void)openCurlEBookWithCell:(CQMainCell *)cell withIndexPath:(NSIndexPath *)indexPath{
 //    cell.hidden = YES;
     
@@ -124,51 +80,7 @@
     pageCurlVC.indexPath = indexPath;
     [(CQMainNavigationController *)self.navigationController pushViewController:pageCurlVC animated:YES withFrame:imgViewFrame];
 }
-//- (void)openCurlEBookWithCell:(CQMainCell *)cell withIndexPath:(NSIndexPath *)indexPath{
-//    cell.hidden = YES;
-//
-//    CGRect imgViewFrame = CGRectMake(cell.x, cell.y - self.collectionView.contentOffset.y, cell.width, cell.height - 21.0);
-//    CGFloat scaleY = kScreen_H / CGRectGetHeight(imgViewFrame);
-//    CGFloat scaleX = kScreen_W / CGRectGetWidth(imgViewFrame);
-//    CGFloat transformX1 = -CGRectGetMinX(imgViewFrame);
-//    CGFloat transformY1 = (kScreen_H - CGRectGetHeight(imgViewFrame)) * 0.5 - CGRectGetMinY(imgViewFrame);
-//    self.imgView.hidden = NO;
-//    self.imgView.frame = imgViewFrame;
-//
-//    CQPageCurlController *pageCurlVC = [[CQPageCurlController alloc] init];
-//    pageCurlVC.transformY = transformY1;
-//    pageCurlVC.transformX = transformX1;
-//    pageCurlVC.scaleY = scaleY;
-//    pageCurlVC.scaleX = scaleX;
-//    pageCurlVC.indexPath = indexPath;
-//    pageCurlVC.delegate = self;
-//    pageCurlVC.view.layer.anchorPoint = CGPointMake(0, 0.5);
-//    pageCurlVC.view.frame = CGRectMake(0, 0, kScreen_W, kScreen_H);
-//    pageCurlVC.view.layer.masksToBounds = YES;
-//
-//    CATransform3D pageViewTransform = CATransform3DIdentity;
-//    pageViewTransform.m42 = -transformY1;
-//    pageViewTransform.m41 = -transformX1;
-//    pageCurlVC.view.layer.transform = CATransform3DScale(pageViewTransform, 1 / scaleX, 1 / scaleY, 1.0);
-//    [self addChildViewController:pageCurlVC];
-//    [self.view addSubview:pageCurlVC.view];
-//    [self statusBarHiddenEvent:YES];
-//
-//    __block CATransform3D transform = CATransform3DIdentity;
-//    [UIView animateWithDuration:OpenBookAnimationDuration animations:^{
-//        transform.m34 = 4.5 / 2000;
-//        transform.m11 = scaleX * 1.3;
-//        transform.m22 = scaleY * 1.2;
-//        transform.m42 = transformY1;
-//        transform.m41 = transformX1;
-//        self.imgView.layer.transform =  CATransform3DRotate(transform, M_PI_2, 0, 1, 0);
-//        pageCurlVC.view.layer.transform = CATransform3DIdentity;
-//    } completion:^(BOOL finished) {
-//        self.imgView.hidden = YES;
-//        cell.hidden = NO;
-//        self.view.userInteractionEnabled = YES;
-//    }];
-//}
+
 
 - (BOOL)prefersStatusBarHidden {
     return NO;
