@@ -58,29 +58,14 @@
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-//    self.view.userInteractionEnabled = NO;
     CQMainCell *cell = (CQMainCell *)[collectionView cellForItemAtIndexPath:indexPath];
-//    if (self.transitionStyle) { // scroll模式
-//        [self openScrollEBookWithCell:cell withIndexPath:indexPath];
-//    } else { // curl模式
-        [self openCurlEBookWithCell:cell withIndexPath:indexPath];
-//    }
-}
-
-- (void)openCurlEBookWithCell:(CQMainCell *)cell withIndexPath:(NSIndexPath *)indexPath{
-//    cell.hidden = YES;
     
     CGRect imgViewFrame = CGRectMake(cell.x, cell.y - self.collectionView.contentOffset.y, cell.width, cell.height - 21.0);
     CQPageCurlController *pageCurlVC = [[CQPageCurlController alloc] init];
-//    pageCurlVC.transformY = transformY1;
-//    pageCurlVC.transformX = transformX1;
-//    pageCurlVC.scaleY = scaleY;
-//    pageCurlVC.scaleX = scaleX;
     pageCurlVC.imgViewFrame = imgViewFrame;
     pageCurlVC.indexPath = indexPath;
     [(CQMainNavigationController *)self.navigationController pushViewController:pageCurlVC animated:YES withFrame:imgViewFrame];
 }
-
 
 - (BOOL)prefersStatusBarHidden {
     return NO;

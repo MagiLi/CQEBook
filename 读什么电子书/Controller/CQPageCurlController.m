@@ -8,6 +8,7 @@
 
 #import "CQPageCurlController.h"
 #import "CQReadViewController.h"
+#import "CQBackController.h"
 #import "CQCatalogViewController.h"
 #import "CQTopMenuView.h"
 #import "CQBottomMenuView.h"
@@ -25,6 +26,7 @@
 #import "CQPraserEpub.h"
 #import "CQThemeConfig.h"
 #import "CQMainNavigationController.h"
+
 
 @interface CQPageCurlController ()<UIPageViewControllerDataSource,UIPageViewControllerDelegate,UIGestureRecognizerDelegate,CQCatalogViewControllerDelegate,CQReadViewControllerDelegate, CQTopMenuViewDelegate, CQBottomMenuViewDelegate, CQColorMenuViewDelegate>
 @property(nonatomic,strong)UIPageViewController *pageViewController;
@@ -75,7 +77,7 @@
             [self updateChapterWithChapterNum:self.currentChapter];
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.typeSetterFinished = YES;
-                [self.pageViewController setViewControllers:@[[self readViewControllerWithChapter:self.currentChapter withPage:self.currentPage pageCountForAll:self.readModel.pageCountForAll]] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
+                [self.pageViewController setViewControllers:@[[self readViewControllerWithChapter:self.currentChapter withPage:self.currentPage pageCountForAll:(NSUInteger)self.readModel.pageCountForAll]] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
                 [self.zoomAnimation removeFromSuperview];
                 self.zoomAnimation = nil;
             });
@@ -115,14 +117,14 @@
     __weak typeof(self) weakSelf = self;
     [CQReadUtilty resetPagingWithReadModel:self.readModel completion:^(BOOL finished) {
         weakSelf.typeSetterFinished = YES;
-        weakSelf.readViewController.pageCountForAll = self.readModel.pageCountForAll;
+        weakSelf.readViewController.pageCountForAll = (NSUInteger)self.readModel.pageCountForAll;
         [weakSelf.readViewController showLabIndex];
     }];
     
     CQReadViewController *readViewController = [self readViewControllerWithChapter:self.currentChapter withPage:_currentPage pageCountForAll:0];
     [self.pageViewController setViewControllers:@[readViewController] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
 }
-- (CQReadViewController *)readViewControllerWithChapter:(NSUInteger)chapter withPage:(NSUInteger)page pageCountForAll:(NSUInteger)pageCountForAll {
+- (CQReadViewController *)readViewControllerWithChapter:(NSInteger)chapter withPage:(NSUInteger)page pageCountForAll:(NSUInteger)pageCountForAll {
     if (page > self.arrayPage.count - 1) { // 容错处理
         page = self.arrayPage.count - 1;
         self.currentPage = page;
@@ -143,7 +145,7 @@
 
 #pragma mark -
 #pragma mark - 更新阅读记录
-- (void)updaterRecoderModelWithChapter:(NSUInteger)chapter withPage:(NSUInteger)page {
+- (void)updaterRecoderModelWithChapter:(NSInteger)chapter withPage:(NSUInteger)page {
     self.currentPage = page;
     self.currentChapter = chapter;
     self.readModel.read_recoder.currentChapter = chapter;
@@ -186,41 +188,56 @@
 }
 #pragma mark -
 #pragma mark - UIPageViewControllerDataSource
-// 向右翻页
+// 手指从左向右翻页
 - (nullable UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerBeforeViewController:(UIViewController *)viewController {
-    if (self.readViewController.selectedState) return nil; // 编辑状态下的处理
-    CQReadViewController *readViewController = (CQReadViewController *)viewController;
-    NSInteger currentPage = readViewController.page;
+    if (self.readViewController.selectedState) return nil; // 编辑状态下不做处理
+//    CQReadViewController *readViewController = (CQReadViewController *)viewController;
+    CQReadViewController *readViewController = self.readViewController;
+    NSUInteger currentPage = readViewController.page;
     NSInteger currentChapter =  readViewController.chapter;
 
-    if (self.flipingCurl) {
+    if (self.flipingCurl) {// curl下特殊处理：更新阅读章节记录
         [self updateChapterWithChapterNum:currentChapter];
     }
-    if (currentPage == 0 && currentChapter == 0) return nil;
+    if (currentPage == 0 && currentChapter == 0) return nil;// 第0章第0页不做处理
 
+    if ([viewController isKindOfClass:[CQReadViewController class]]) {// 背面
+        CQBackController *backVC = [[CQBackController alloc] init];
+        [backVC updateWithViewController:viewController];
+        return backVC;
+    }
+    
     if (currentPage == 0) {
         currentChapter--;
         [self updateChapterWithChapterNum:currentChapter];
-        currentPage = self.chapterModel.pageCountForChapter - 1;
+        currentPage = (NSUInteger)self.chapterModel.pageCountForChapter - 1;
         self.flipingCurl = YES;
     } else {
         currentPage--;
     }
-    CQLog(@"右饭");
+    CQLog(@"手指从左向右翻页");
     [self updaterRecoderModelWithChapter:currentChapter withPage:currentPage];
-    return [self readViewControllerWithChapter:currentChapter withPage:currentPage pageCountForAll:self.readModel.pageCountForAll];
+    
+    CQReadViewController *readVC = [self readViewControllerWithChapter:currentChapter withPage:currentPage pageCountForAll:(NSUInteger)self.readModel.pageCountForAll];
+    return readVC;
 }
-// 向左翻页
+// 手指从右向左翻页
 - (nullable UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerAfterViewController:(UIViewController *)viewController {
-    if (self.readViewController.selectedState) return nil;
-    CQReadViewController *readViewController = (CQReadViewController *)viewController;
-    NSInteger currentPage = readViewController.page;
-    NSInteger currentChapter =  readViewController.chapter;
-
-    if (self.flipingCurl) {// curl下特殊处理
+    if (self.readViewController.selectedState) return nil;// 处于编辑状态时不做处理
+//    CQReadViewController *readViewController = (CQReadViewController *)viewController;
+    NSInteger currentPage = self.readViewController.page;
+    NSInteger currentChapter =  self.readViewController.chapter;
+    if (self.flipingCurl) {// curl下特殊处理：更新阅读章节记录
         [self updateChapterWithChapterNum:currentChapter];
     }
+    // 最后一章节，最后一页
     if (currentChapter == self.readModel.read_chapter.count-1 && currentPage == self.chapterModel.pageCountForChapter-1) return nil;
+    
+    if ([viewController isKindOfClass:[CQReadViewController class]]) {// 背面
+        CQBackController *backVC = [[CQBackController alloc] init];
+        [backVC updateWithViewController:viewController];
+        return backVC;
+    }
     
     if (currentPage == self.chapterModel.pageCountForChapter - 1) {
         currentChapter++;
@@ -230,9 +247,11 @@
     } else {
         currentPage++;
     }
-    CQLog(@"做饭");
+    CQLog(@"手指从右向左翻页");
     [self updaterRecoderModelWithChapter:currentChapter withPage:currentPage];
-    return [self readViewControllerWithChapter:currentChapter withPage:currentPage pageCountForAll:self.readModel.pageCountForAll];
+//    return [self readViewControllerWithChapter:currentChapter withPage:currentPage pageCountForAll:self.readModel.pageCountForAll];
+    CQReadViewController *readVC = [self readViewControllerWithChapter:currentChapter withPage:currentPage pageCountForAll:(NSUInteger)self.readModel.pageCountForAll];
+    return readVC;
 }
 
 #pragma mark -
@@ -247,7 +266,7 @@
         NSInteger currentChapter = readViewController.chapter;
         [self updateChapterWithChapterNum:currentChapter];
         [self updaterRecoderModelWithChapter:currentChapter withPage:currentPage];
-        [self.pageViewController setViewControllers:@[[self readViewControllerWithChapter:currentChapter withPage:currentPage pageCountForAll:self.readModel.pageCountForAll]] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
+        [self.pageViewController setViewControllers:@[[self readViewControllerWithChapter:currentChapter withPage:currentPage pageCountForAll:(NSUInteger)self.readModel.pageCountForAll]] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
     }
     CQLog(@"completion");
 }
@@ -260,7 +279,7 @@
     NSSet *markSetTemp = [self.readModel.read_mark filteredSetUsingPredicate:predicateTemp];
 
     if (self.currentChapter == markModel.currentChapter && markSetTemp.count <= 1) {
-        CQPageModel *pageModel = self.arrayPage[markModel.currentPage];
+        CQPageModel *pageModel = self.arrayPage[(NSUInteger)markModel.currentPage];
         pageModel.markAdded = NO;
         if (markModel.currentPage == self.currentPage) {
             [self.readViewController removeMark];
@@ -285,7 +304,9 @@
 #pragma mark - CQCatalogViewControllerDelegate
 - (void)openChapter:(NSInteger)chapter page:(NSInteger)page{
     [self updateChapterWithChapterNum:chapter];
-    [self.pageViewController setViewControllers:@[[self readViewControllerWithChapter:chapter withPage:page pageCountForAll:self.readModel.pageCountForAll]] direction:UIPageViewControllerNavigationDirectionForward animated:YES completion:nil];
+    CQReadViewController *readVC = [self readViewControllerWithChapter:chapter withPage:page pageCountForAll:(NSUInteger)self.readModel.pageCountForAll];
+    CQBackController *backVC = [[CQBackController alloc] init];
+    [self.pageViewController setViewControllers:@[readVC,backVC] direction:UIPageViewControllerNavigationDirectionForward animated:YES completion:nil];
 }
 
 #pragma mark -
@@ -348,7 +369,7 @@
 
 - (void)changeCurrentPageColor {
     [self updateChapterWithChapterNum:self.currentChapter];
-    [self.pageViewController setViewControllers:@[[self readViewControllerWithChapter:self.currentChapter withPage:self.currentPage pageCountForAll:self.readModel.pageCountForAll]] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
+    [self.pageViewController setViewControllers:@[[self readViewControllerWithChapter:self.currentChapter withPage:self.currentPage pageCountForAll:(NSUInteger)self.readModel.pageCountForAll]] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
 }
 - (void)changeFontSize:(CGFloat)fontSize {
     self.typeSetterFinished = NO;
@@ -476,6 +497,7 @@
         _pageViewController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStylePageCurl navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:nil];
         _pageViewController.dataSource = self;
         _pageViewController.delegate = self;
+        _pageViewController.doubleSided = YES;
         [self.view addSubview:_pageViewController.view];
     }
     return _pageViewController;

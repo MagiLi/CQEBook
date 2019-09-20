@@ -20,7 +20,7 @@
 
 @interface CQReadViewController : UIViewController
 @property(nonatomic,assign)NSUInteger page; // 第几页
-@property(nonatomic,assign)NSUInteger chapter; // 第几张
+@property(nonatomic,assign)NSInteger chapter; // 第几张
 @property(nonatomic,assign)NSUInteger pageCountForAll; // 总页数
 @property(nonatomic,assign,readonly)BOOL selectedState;
 

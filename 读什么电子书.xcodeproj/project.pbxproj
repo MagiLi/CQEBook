@@ -92,6 +92,7 @@
 		04DB76BA1E850DE5007A345B /* CQPageScrollController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04DB76B91E850DE5007A345B /* CQPageScrollController.m */; };
 		04E5F8811E8915DA00E38635 /* CQScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E5F8801E8915DA00E38635 /* CQScrollView.m */; };
 		04F9F1591E81348E0095B550 /* CQBattery.m in Sources */ = {isa = PBXBuildFile; fileRef = 04F9F1581E81348E0095B550 /* CQBattery.m */; };
+		340FDC5B233462EC00E30351 /* CQBackController.m in Sources */ = {isa = PBXBuildFile; fileRef = 340FDC5A233462EC00E30351 /* CQBackController.m */; };
 		34C9867D20512D63009B610B /* CQMainNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34C9867B20512D63009B610B /* CQMainNavigationController.m */; };
 		34C9868520512D7B009B610B /* CQBaseAnimator.m in Sources */ = {isa = PBXBuildFile; fileRef = 34C9868020512D7B009B610B /* CQBaseAnimator.m */; };
 		34C9868620512D7B009B610B /* CQPushAnimator.m in Sources */ = {isa = PBXBuildFile; fileRef = 34C9868220512D7B009B610B /* CQPushAnimator.m */; };
@@ -269,6 +270,8 @@
 		04E5F8801E8915DA00E38635 /* CQScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQScrollView.m; sourceTree = "<group>"; };
 		04F9F1571E81348E0095B550 /* CQBattery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQBattery.h; sourceTree = "<group>"; };
 		04F9F1581E81348E0095B550 /* CQBattery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQBattery.m; sourceTree = "<group>"; };
+		340FDC59233462EC00E30351 /* CQBackController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQBackController.h; sourceTree = "<group>"; };
+		340FDC5A233462EC00E30351 /* CQBackController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CQBackController.m; sourceTree = "<group>"; };
 		34C9867B20512D63009B610B /* CQMainNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQMainNavigationController.m; sourceTree = "<group>"; };
 		34C9867C20512D63009B610B /* CQMainNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQMainNavigationController.h; sourceTree = "<group>"; };
 		34C9867F20512D7B009B610B /* CQPushAnimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQPushAnimator.h; sourceTree = "<group>"; };
@@ -464,6 +467,8 @@
 				042B27991E444BBC00B5EE6E /* CQPageCurlController.m */,
 				04DB76B81E850DE5007A345B /* CQPageScrollController.h */,
 				04DB76B91E850DE5007A345B /* CQPageScrollController.m */,
+				340FDC59233462EC00E30351 /* CQBackController.h */,
+				340FDC5A233462EC00E30351 /* CQBackController.m */,
 				042B27AF1E445D6B00B5EE6E /* CQReadViewController.h */,
 				042B27B01E445D6B00B5EE6E /* CQReadViewController.m */,
 				04D8CEFB1E4AEF75005F0EF6 /* CQCatalogViewController.h */,
@@ -693,7 +698,7 @@
 				TargetAttributes = {
 					042B274A1E4430A200B5EE6E = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = ZWBZFWHGFW;
+						DevelopmentTeam = U8A26JGV9K;
 						ProvisioningStyle = Automatic;
 					};
 					042B27631E4430A200B5EE6E = {
@@ -715,6 +720,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -811,6 +817,7 @@
 				04CF5AB61E601D9700E54EB4 /* NoteModel+CoreDataProperties.m in Sources */,
 				04D8CEFD1E4AEF75005F0EF6 /* CQCatalogViewController.m in Sources */,
 				04F9F1591E81348E0095B550 /* CQBattery.m in Sources */,
+				340FDC5B233462EC00E30351 /* CQBackController.m in Sources */,
 				04A025D61E83D77300B64E17 /* CQColorMenuView.m in Sources */,
 				042B27AB1E444E3B00B5EE6E /* CQReadUtilty.m in Sources */,
 				04CF5AAD1E601D9700E54EB4 /* RecorderModel+CoreDataClass.m in Sources */,
@@ -983,14 +990,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				DEVELOPMENT_TEAM = ZWBZFWHGFW;
+				DEVELOPMENT_TEAM = U8A26JGV9K;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/读什么电子书/CQRead.pch";
 				HEADER_SEARCH_PATHS = /usr/include/libxml2;
 				INFOPLIST_FILE = "读什么电子书/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.CQEBook.iOS.test;
+				PRODUCT_BUNDLE_IDENTIFIER = com.CQEBook.iOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -1000,14 +1007,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				DEVELOPMENT_TEAM = ZWBZFWHGFW;
+				DEVELOPMENT_TEAM = U8A26JGV9K;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/读什么电子书/CQRead.pch";
 				HEADER_SEARCH_PATHS = /usr/include/libxml2;
 				INFOPLIST_FILE = "读什么电子书/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.CQEBook.iOS.test;
+				PRODUCT_BUNDLE_IDENTIFIER = com.CQEBook.iOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

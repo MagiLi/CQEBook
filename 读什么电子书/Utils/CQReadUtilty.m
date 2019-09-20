@@ -175,33 +175,36 @@
         NSUInteger pageCountForAll = 0;
         NSInteger count = readModel.read_chapter.count;
         for (NSInteger i = 0; i < count; i++) {
-            ChapterModel *currentChapterModel = [CQReadUtilty queryChapterModelWithReadModel:readModel withChapter:i];
-            
-            NSMutableAttributedString *attributedStr = [[NSMutableAttributedString alloc] init];
-            NSAttributedString *attributeTitle = [CQFrameSetterParser parseAttributedContentWithType:NSAttributedStringTitle withContent:currentChapterModel.title];// 标题
-            [attributedStr appendAttributedString:attributeTitle];
-            if (currentChapterModel.chapter_cover) {
-                NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:@250, @"height", @170, @"width", nil];
-                NSAttributedString *placeStr = [CQFrameSetterParser getPlaceholderStringWithDictionary:dict]; // 占位符
-                [attributedStr appendAttributedString:placeStr];
-            }            
-            if (currentChapterModel.titleH1.length) {
-                NSAttributedString *attributeTitleH1 = [CQFrameSetterParser parseAttributedContentWithType:NSAttributedStringTitleH1 withContent:currentChapterModel.titleH1];// 副标题
-                [attributedStr appendAttributedString:attributeTitleH1];
+            @autoreleasepool {
+                ChapterModel *currentChapterModel = [CQReadUtilty queryChapterModelWithReadModel:readModel withChapter:i];
+                
+                NSMutableAttributedString *attributedStr = [[NSMutableAttributedString alloc] init];
+                NSAttributedString *attributeTitle = [CQFrameSetterParser parseAttributedContentWithType:NSAttributedStringTitle withContent:currentChapterModel.title];// 标题
+                [attributedStr appendAttributedString:attributeTitle];
+                if (currentChapterModel.chapter_cover) {
+                    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:@250, @"height", @170, @"width", nil];
+                    NSAttributedString *placeStr = [CQFrameSetterParser getPlaceholderStringWithDictionary:dict]; // 占位符
+                    [attributedStr appendAttributedString:placeStr];
+                }
+                if (currentChapterModel.titleH1.length) {
+                    NSAttributedString *attributeTitleH1 = [CQFrameSetterParser parseAttributedContentWithType:NSAttributedStringTitleH1 withContent:currentChapterModel.titleH1];// 副标题
+                    [attributedStr appendAttributedString:attributeTitleH1];
+                }
+                
+                if (currentChapterModel.titleH2.length) {
+                    NSAttributedString *attributeTitleH2 = [CQFrameSetterParser parseAttributedContentWithType:NSAttributedStringTitleH2 withContent:currentChapterModel.titleH2];// 副标题
+                    [attributedStr appendAttributedString:attributeTitleH2];
+                }
+                NSAttributedString *attributeContent = [CQFrameSetterParser parseAttributedContentWithType:NSAttributedStringDefault withContent:currentChapterModel.chapterContent];// 内容
+                [attributedStr appendAttributedString:attributeContent];
+                CTFramesetterRef frameSetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)attributedStr);
+                [CQReadUtilty resetterWithChapterModel:currentChapterModel withBounds:bounds withFrameSetter:frameSetter];
+                CFRelease(frameSetter);
+                
+                currentChapterModel.chapterOffset = pageCountForAll;
+                pageCountForAll += currentChapterModel.pageCountForChapter;
             }
-            
-            if (currentChapterModel.titleH2.length) {
-                NSAttributedString *attributeTitleH2 = [CQFrameSetterParser parseAttributedContentWithType:NSAttributedStringTitleH2 withContent:currentChapterModel.titleH2];// 副标题
-                [attributedStr appendAttributedString:attributeTitleH2];
-            }
-            NSAttributedString *attributeContent = [CQFrameSetterParser parseAttributedContentWithType:NSAttributedStringDefault withContent:currentChapterModel.chapterContent];// 内容
-            [attributedStr appendAttributedString:attributeContent];
-            CTFramesetterRef frameSetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)attributedStr);
-            [CQReadUtilty resetterWithChapterModel:currentChapterModel withBounds:bounds withFrameSetter:frameSetter];
-            CFRelease(frameSetter);
-            
-            currentChapterModel.chapterOffset = pageCountForAll;
-            pageCountForAll += currentChapterModel.pageCountForChapter;
+           
         }
         readModel.pageCountForAll = pageCountForAll;
         readModel.currentFontSize = [CQThemeConfig sharedInstance].fontSize;
