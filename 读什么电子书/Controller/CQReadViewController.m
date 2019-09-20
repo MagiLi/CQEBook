@@ -75,7 +75,7 @@
 }
 - (void)showLabIndex {
     _labIndex.hidden = NO;
-    _labIndex.text = [NSString stringWithFormat:@"%zd / %zd", _chapterModel.chapterOffset + _page + 1, self.pageCountForAll];
+    _labIndex.text = [NSString stringWithFormat:@"%lu / %zd", (unsigned long)(_chapterModel.chapterOffset + _page + 1), self.pageCountForAll];
 }
 - (BOOL)selectedState {
     return self.readView.pathArray.count;
@@ -101,7 +101,7 @@
 - (UILabel *)labIndex {
     if (!_labIndex) {
         _labIndex = [[UILabel alloc] initWithFrame:CGRectMake(LeftSpacing, kScreen_H - PageIndex_H, 100, PageIndex_H)];
-        _labIndex.text = [NSString stringWithFormat:@"%zd / %zd", _chapterModel.chapterOffset + _page + 1, self.pageCountForAll];
+        _labIndex.text = [NSString stringWithFormat:@"%lu / %zd", (unsigned long)(_chapterModel.chapterOffset + _page + 1), self.pageCountForAll];
         _labIndex.font = [UIFont systemFontOfSize:12];
         _labIndex.textColor = [UIColor lightGrayColor];
     }

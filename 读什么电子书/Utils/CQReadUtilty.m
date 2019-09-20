@@ -209,8 +209,10 @@
         readModel.pageCountForAll = pageCountForAll;
         readModel.currentFontSize = [CQThemeConfig sharedInstance].fontSize;
         [[CQCoreDataTools sharedCoreDataTools].managedObjectContext save:nil];
-        if (completion) {
-            completion(YES);
+        if (completion) {// 回调在主线程
+            dispatch_sync(dispatch_get_main_queue(), ^{
+                completion(YES);
+            });
         }
     });
 

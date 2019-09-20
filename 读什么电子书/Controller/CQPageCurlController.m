@@ -374,13 +374,13 @@
 - (void)changeFontSize:(CGFloat)fontSize {
     self.typeSetterFinished = NO;
     self.chapterModel = [CQReadUtilty queryChapterModelWithReadModel:self.readModel withChapter:self.currentChapter];
-    
+    // 1.先解析当前章节展示给用户
     NSAttributedString *attributedStr = [self getAttributeContentWithChapter:self.currentChapter];
     CQPageModel *pageModel = self.arrayPage[self.currentPage];
     CTFramesetterRef frameSetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)attributedStr);
     self.arrayPage = [CQReadUtilty getPageArrayWithChapterModel:self.chapterModel withFrameSetter:frameSetter withPage:&_currentPage withLocation:pageModel.location];
     CFRelease(frameSetter);
-    
+    // 2.再解析所有的保存到数据库
     [self resetPaging];
 }
 
