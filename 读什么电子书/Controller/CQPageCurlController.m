@@ -77,7 +77,9 @@
             [self updateChapterWithChapterNum:self.currentChapter];
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.typeSetterFinished = YES;
-                [self.pageViewController setViewControllers:@[[self readViewControllerWithChapter:self.currentChapter withPage:self.currentPage pageCountForAll:(NSUInteger)self.readModel.pageCountForAll]] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
+                CQReadViewController *readViewController = [self readViewControllerWithChapter:self.currentChapter withPage:self.currentPage pageCountForAll:(NSUInteger)self.readModel.pageCountForAll];
+                self.readViewController = readViewController;
+                [self.pageViewController setViewControllers:@[readViewController] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
                 [self.zoomAnimation removeFromSuperview];
                 self.zoomAnimation = nil;
             });
@@ -122,6 +124,7 @@
     }];
     
     CQReadViewController *readViewController = [self readViewControllerWithChapter:self.currentChapter withPage:_currentPage pageCountForAll:0];
+    self.readViewController = readViewController;
     [self.pageViewController setViewControllers:@[readViewController] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
 }
 - (CQReadViewController *)readViewControllerWithChapter:(NSInteger)chapter withPage:(NSUInteger)page pageCountForAll:(NSUInteger)pageCountForAll {
@@ -139,7 +142,7 @@
     readViewController.pageCountForAll = self.typeSetterFinished ? pageCountForAll : 0;
     readViewController.delegate = self;
     readViewController.batteryLevel = self.batteryLevel;
-    self.readViewController = readViewController;
+//    self.readViewController = readViewController;
     return readViewController;
 }
 
@@ -201,12 +204,6 @@
     }
     if (currentPage == 0 && currentChapter == 0) return nil;// 第0章第0页不做处理
 
-    if ([viewController isKindOfClass:[CQReadViewController class]]) {// 背面
-        CQBackController *backVC = [[CQBackController alloc] init];
-        [backVC updateWithViewController:viewController];
-        return backVC;
-    }
-    
     if (currentPage == 0) {
         currentChapter--;
         [self updateChapterWithChapterNum:currentChapter];
@@ -215,10 +212,17 @@
     } else {
         currentPage--;
     }
+    if ([viewController isKindOfClass:[CQReadViewController class]]) {// 背面
+        CQReadViewController *readVC = [self readViewControllerWithChapter:currentChapter withPage:currentPage pageCountForAll:(NSUInteger)self.readModel.pageCountForAll];
+        CQBackController *backVC = [[CQBackController alloc] init];
+        [backVC updateWithViewController:readVC];
+        return backVC;
+    }
     CQLog(@"手指从左向右翻页");
     [self updaterRecoderModelWithChapter:currentChapter withPage:currentPage];
     
     CQReadViewController *readVC = [self readViewControllerWithChapter:currentChapter withPage:currentPage pageCountForAll:(NSUInteger)self.readModel.pageCountForAll];
+    self.readViewController = readVC;
     return readVC;
 }
 // 手指从右向左翻页
@@ -251,12 +255,12 @@
     [self updaterRecoderModelWithChapter:currentChapter withPage:currentPage];
 //    return [self readViewControllerWithChapter:currentChapter withPage:currentPage pageCountForAll:self.readModel.pageCountForAll];
     CQReadViewController *readVC = [self readViewControllerWithChapter:currentChapter withPage:currentPage pageCountForAll:(NSUInteger)self.readModel.pageCountForAll];
+    self.readViewController = readVC;
     return readVC;
 }
 
 #pragma mark -
 #pragma mark - UIPageViewControllerDelegate
-
 - (void)pageViewController:(UIPageViewController *)pageViewController didFinishAnimating:(BOOL)finished previousViewControllers:(NSArray<UIViewController *> *)previousViewControllers transitionCompleted:(BOOL)completed {
     self.flipingCurl = NO;
     if (!completed) {
@@ -266,7 +270,6 @@
         NSInteger currentChapter = readViewController.chapter;
         [self updateChapterWithChapterNum:currentChapter];
         [self updaterRecoderModelWithChapter:currentChapter withPage:currentPage];
-        [self.pageViewController setViewControllers:@[[self readViewControllerWithChapter:currentChapter withPage:currentPage pageCountForAll:(NSUInteger)self.readModel.pageCountForAll]] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
     }
     CQLog(@"completion");
 }
@@ -305,6 +308,7 @@
 - (void)openChapter:(NSInteger)chapter page:(NSInteger)page{
     [self updateChapterWithChapterNum:chapter];
     CQReadViewController *readVC = [self readViewControllerWithChapter:chapter withPage:page pageCountForAll:(NSUInteger)self.readModel.pageCountForAll];
+    self.readViewController = readVC;
     CQBackController *backVC = [[CQBackController alloc] init];
     [self.pageViewController setViewControllers:@[readVC,backVC] direction:UIPageViewControllerNavigationDirectionForward animated:YES completion:nil];
 }
@@ -369,7 +373,9 @@
 
 - (void)changeCurrentPageColor {
     [self updateChapterWithChapterNum:self.currentChapter];
-    [self.pageViewController setViewControllers:@[[self readViewControllerWithChapter:self.currentChapter withPage:self.currentPage pageCountForAll:(NSUInteger)self.readModel.pageCountForAll]] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
+    CQReadViewController *readViewController =[self readViewControllerWithChapter:self.currentChapter withPage:self.currentPage pageCountForAll:(NSUInteger)self.readModel.pageCountForAll];
+    self.readViewController = readViewController;
+    [self.pageViewController setViewControllers:@[readViewController] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
 }
 - (void)changeFontSize:(CGFloat)fontSize {
     self.typeSetterFinished = NO;

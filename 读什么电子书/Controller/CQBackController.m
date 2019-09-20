@@ -30,7 +30,7 @@
         self.view.backgroundColor = [CQThemeConfig sharedInstance].theme;
     }
     [_imageView setImage:_backgroundImage];
-    [_imageView setAlpha:0.9];
+    [_imageView setAlpha:0.5];
 }
 
 - (void)updateWithViewController:(UIViewController *)viewController {
